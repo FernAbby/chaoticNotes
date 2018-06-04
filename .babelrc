@@ -1,0 +1,33 @@
+{
+  "presets": [//设定转码规则
+    "env",
+    "es2015",
+    "react",
+    "stage-2"
+  ],
+  "comments": false, // 生成文件不产生注释
+  "plugins": ["transform-runtime"],//插件
+}
+
+
+//# ES2015转码规则
+//$ npm install --save-dev babel-preset-es2015
+
+//babel-preset-latest
+//babel-preset-es2015
+//babel-preset-es2016
+//babel-preset-es2017
+
+//# react转码规则
+//$ npm install --save-dev babel-preset-react
+
+//# ES7不同阶段语法提案的转码规则（共有4个阶段），选装一个
+//$ npm install --save-dev babel-preset-stage-0
+//$ npm install --save-dev babel-preset-stage-1
+//$ npm install --save-dev babel-preset-stage-2
+//$ npm install --save-dev babel-preset-stage-3
+//$ npm install --save-dev babel-preset-stage-4
+//$ npm install --save-dev babel-preset-stage-x(stage-0/1/2/3/
+
+//插件
+//$ npm install --save-dev babel-plugin-transform-runtime
