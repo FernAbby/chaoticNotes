@@ -1,41 +1,92 @@
 const webpack = require('webpack');
+const moment = require('moment');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const envConfig = require('./node-tool/env.js');
 
 module.exports = {
-    entry: "./public/index.js", //已多次提及的唯一入口文件
+    entry: "./src/index.js", //已多次提及的唯一入口文件
     output: {
         path: __dirname + "/build",
-        filename: "static/js/main.[hash].js"
+        filename: "./static/js/main.js"
+        // filename: "./static/js/main.[hash].js"
     },
     devtool: 'source-map',//调试模式
     devServer: {
+        host: envConfig.HOST || "0.0.0.0" || "localhost",
+        port: envConfig.PORT || 3008,
+        https: envConfig.HTTPS=="true"?true:false,
+        compress: true,
         contentBase: "./public", //本地服务器所加载的页面所在的目录
         historyApiFallback: true, //不跳转
         inline: true,
-        hot: true
+        hot: true,
+        proxy: envConfig.PROXY || {
+            "/api": "http://localhost:"+ (envConfig.PORT || 3008)
+        }
     },
     module: {
         rules: [{
-            test: /\.(js|jsx)$/,
+            test: /\.(js|jsx|mjs)$/,
             use: {
                 loader: "babel-loader"
             },
-            exclude: /node_modules/
+            exclude: /node_modules/,
+            include: /src/
         },{
             test: /\.css$/,
-            exclude: /node_modules/,
             use: [
                 MiniCssExtractPlugin.loader,
                 "css-loader"
-            ]
+            ],
+            exclude: /node_modules/,
+            include: /src/,
+        }, {
+            test: /\.less$/,
+            use: [
+                MiniCssExtractPlugin.loader,
+                "css-loader",
+                "autoprefixer-loader",
+                "less-loader"
+            ],
+            exclude: /node_modules/,
+            include: /src/
+        },{
+            test:/\.(sass|scss)$/,
+            use: [
+                MiniCssExtractPlugin.loader,
+                "css-loader",
+                "autoprefixer-loader",
+                "sass-loader"
+            ],
+            exclude: /node_modules/,
+            include: /src/
+        },{
+            test: /\.(png|bmp|jpe?g|gif)$/,
+            use: [{
+                loader: 'url-loader',
+                options: { // options参数可以定义多大的图片转换为base64
+                    limit: 50000, // 表示小于50kb的图片转为base64,大于50kb的是路径
+                    outputPath: './static/images' //定义输出的图片文件夹
+                }
+            }],
+            exclude: /node_modules/,
+            include: /src/
+        },{
+            test: /\.json$/,
+            loader: 'json-loader'
+        },{
+            test: /\.txt$/,
+            use: 'raw-loader'
         }]
     },
     plugins: [
-        new webpack.BannerPlugin('版权所有，翻版必究'),
+        new webpack.BannerPlugin('Create By Wenzhen At ' + moment().format('YYYY-MM-DD HH:mm:ss')),
         new HtmlWebpackPlugin({
             template: './public/index.html',  // 文件地址
-            filename: './build/index.html',  // 生成文件名字
+            filename: './index.html',  // 生成文件名字
+            title: "javaScript工具库",
+            favicon: '',
             inject: true,    // 不把生成的css，js插入到html中
             // chunks: ['app'],  //指定某一个入口，只会把入口相关载入html
             minify: {  // 压缩html
@@ -43,10 +94,14 @@ module.exports = {
             }
         }),
         new MiniCssExtractPlugin({
-            // Options similar to the same options in webpackOptions.output
-            // both options are optional
-            filename: "./build/static/css/style.css",
+            filename: "./static/css/style.css",
         })
     ],
-    mode: 'production',//development,
+    mode: 'production',//development
+    resolve: {
+        extensions: ['.js','.jsx','.json','.web.js','.mjs','.web.jsx'],
+    },
+    externals: {
+        BMap: 'window.BMap',
+    }
 };
