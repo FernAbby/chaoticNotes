@@ -13,7 +13,7 @@ module.exports = {
     },
     devtool: 'source-map',//调试模式
     devServer: {
-        host: envConfig.HOST || "0.0.0.0" || "localhost",
+        host: envConfig.HOST || "localhost" || "0.0.0.0",
         port: envConfig.PORT || 3008,
         https: envConfig.HTTPS=="true"?true:false,
         compress: true,
@@ -81,6 +81,7 @@ module.exports = {
         }]
     },
     plugins: [
+        new webpack.HotModuleReplacementPlugin(),
         new webpack.BannerPlugin('Create By Wenzhen At ' + moment().format('YYYY-MM-DD HH:mm:ss')),
         new HtmlWebpackPlugin({
             template: './public/index.html',  // 文件地址
