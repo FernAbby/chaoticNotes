@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Test from './components/test'
 
 class App extends Component {
     constructor(props){
@@ -6,7 +7,9 @@ class App extends Component {
     }
     render(){
         return(
-            <div>这是测试页面,哈哈哈副部级!</div>
+            <div>
+               <Test/>
+            </div>
         );
     }
 }
