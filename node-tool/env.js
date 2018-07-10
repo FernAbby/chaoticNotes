@@ -1,9 +1,9 @@
 const fs = require('fs');
 const querystring = require('querystring');
-var Config = {};
+let Config = {};
 
 try{
-    Config = fs.readFileSync('./.env', 'utf8');
+    Config = fs.readFileSync('./.env.development', 'utf8');
 }catch(err){
     Config = undefined;
 }

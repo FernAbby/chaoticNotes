@@ -10,6 +10,10 @@
         root.CallApp = factory();
     }
 }(window,function(){
+    const device = {};
+    const UA = navigator.userAgent;
+    const IOS_UA_ARR = (navigator.userAgent).match(/OS(\d+)_(\d+)_?(\d+)?/);
+
     console.log('hahha');
     // https://github.com/ztktct/callApp/blob/master/callApp.js
     return {};

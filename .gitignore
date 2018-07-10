@@ -1,7 +1,19 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
-# phpstorm project files
+dist
+node_modules
+yarn.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ide
 .idea
+
+# Mac General
+.DS_Store
+.AppleDouble
+.LSOverride
 
 # netbeans project files
 nbproject
@@ -26,7 +38,3 @@ Thumbs.db
 .env.development.local
 .env.test.local
 .env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*

@@ -21,8 +21,9 @@
             }
             return true;
         }
-
-        params(url){
+        // Get the parameters of link
+        parameters(url){
+            url = decodeURIComponent(url);
             if(url&&url.indexOf('?')>-1){
                 const params = {};
                 const paramsArray = url.split('?')[1].split('&');
@@ -33,6 +34,65 @@
                 return params;
             }
             return {};
+        }
+
+        param(data){
+            const resultArray = [];
+            const addKeyValuePair = (paths,key,value) =>{
+                console.log(paths,key,value);
+                value = this.isFunction( value ) ? value():( value == null ? '': value);
+                return `${paths.join('')}${encodeURIComponent( key )}=${encodeURIComponent( value )}`;
+                // return `${paths.join('')}${key}=${value}`;
+            }
+            const paramArray = (paths,data_array) => {
+                data_array.forEach((item,i)=>{
+                    if(typeof item !== 'object'){
+                        resultArray.push(addKeyValuePair(paths,`[${i}]`,item));
+                    }else{
+                        const new_paths = JSON.parse(JSON.stringify(paths));
+                        new_paths.push(`[${i}]`);
+                        if(item.constructor.name==='Array'){
+                            paramArray(new_paths,item);
+                        }else if(item.constructor.name==='Object') {
+                            paramObject(new_paths,item);
+                        }
+                    }
+                });
+            }
+            const paramObject = (paths,data_object) =>{
+                for ( const name in data_object ) {
+                    if (!data_object.hasOwnProperty(name)) {
+                        continue;
+                    }
+                    const item = data_object[name];
+                    const key = paths.length>0?`[${name}]`:name;
+                    if(typeof item !== 'object'){
+                        resultArray.push(addKeyValuePair(paths,key,item));
+                    }else{
+                        const new_paths = JSON.parse(JSON.stringify(paths));
+                        new_paths.push(key);
+                        if(item.constructor.name==='Array'){
+                            paramArray(new_paths,item);
+                        }else if(item.constructor.name==='Object') {
+                            paramObject(new_paths,item);
+                        }
+                    }
+                }
+            }
+            if(typeof data !== 'object'){
+                return data;
+            }else{
+                if(data.constructor.name==='Array'){
+                    paramArray([],data);
+                }else if(data.constructor.name==='Object') {
+                    paramObject([],data);
+                }
+            }
+            return resultArray.join("&").replace(/%20/g,"+");
+        }
+
+        byteSize(str){
+            return new Blob([str]).size;
         }
 
         serialize(data){
@@ -121,6 +181,12 @@
                 return 'element';
             }
             return map[toString.call(obj)];
+        }
+        isFunction(obj){
+            return this.type(obj) === 'function';
+        }
+        isArray(obj){
+            return this.type( obj ) === "array";
         }
     }
     return (new Utils());

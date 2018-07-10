@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const path = require('path');
 const moment = require('moment');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -11,7 +12,7 @@ module.exports = {
         filename: "./static/js/main.js"
         // filename: "./static/js/main.[hash].js"
     },
-    devtool: 'source-map',//调试模式
+    devtool: 'cheap-module-source-map',
     devServer: {
         host: envConfig.HOST || "localhost" || "0.0.0.0",
         port: envConfig.PORT || 3008,
@@ -23,14 +24,16 @@ module.exports = {
         hot: true,
         proxy: envConfig.PROXY || {
             "/api": "http://localhost:"+ (envConfig.PORT || 3008)
-        }
+        },
     },
     module: {
         rules: [{
             test: /\.(js|jsx|mjs)$/,
-            use: {
-                loader: "babel-loader"
-            },
+            use: [{
+                    loader: 'eslint-loader',
+                },
+                "babel-loader"
+            ],
             exclude: /node_modules/,
             include: /src/
         },{
@@ -40,7 +43,7 @@ module.exports = {
                 "css-loader"
             ],
             exclude: /node_modules/,
-            include: /src/,
+            include: [path.resolve(__dirname, 'src')],
         }, {
             test: /\.less$/,
             use: [
@@ -66,7 +69,7 @@ module.exports = {
             use: [{
                 loader: 'url-loader',
                 options: { // options参数可以定义多大的图片转换为base64
-                    limit: 50000, // 表示小于50kb的图片转为base64,大于50kb的是路径
+                    limit: 10000, // 表示小于50kb的图片转为base64,大于50kb的是路径
                     outputPath: './static/images' //定义输出的图片文件夹
                 }
             }],
@@ -99,7 +102,7 @@ module.exports = {
         })
     ],
     mode: 'production',//development
-    resolve: {
+    resolve: {//引入文件格式后缀
         extensions: ['.js','.jsx','.json','.web.js','.mjs','.web.jsx'],
     },
     externals: {
