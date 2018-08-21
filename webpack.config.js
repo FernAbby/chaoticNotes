@@ -16,12 +16,13 @@ module.exports = {
     devServer: {
         host: envConfig.HOST || "localhost" || "0.0.0.0",
         port: envConfig.PORT || 3008,
-        https: envConfig.HTTPS=="true"?true:false,
+        https: envConfig.HTTPS=="true",
         compress: true,
         contentBase: "./public", //本地服务器所加载的页面所在的目录
         historyApiFallback: true, //不跳转
         inline: true,
         hot: true,
+        open: true,//自动打开浏览器
         proxy: envConfig.PROXY || {
             "/api": "http://localhost:"+ (envConfig.PORT || 3008)
         },

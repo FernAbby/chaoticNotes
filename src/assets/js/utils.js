@@ -188,6 +188,15 @@
         isArray(obj){
             return this.type( obj ) === "array";
         }
+        isObject(obj){
+            return this.type( obj ) === "object";
+        }
+        cmp(x,y){
+            if(x===y){
+                return true;
+            }
+
+        }
     }
     return (new Utils());
 }));
