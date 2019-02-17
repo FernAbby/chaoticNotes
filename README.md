@@ -1,2 +1,2 @@
-# javascript-utils
-javascript工具库
+# chaoticNotes
+一些杂乱的笔记，无意义
